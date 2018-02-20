@@ -16,14 +16,14 @@ def homepage(request):
     return render(request, 'index.html', {'login_form': login_form, 'regis_form': regis_form})
 
 def user_register(request):
-    user = User.objects.create_user(username=request.POST['username'],
-                                    email=request.POST['email'], 
-                                    password=request.POST['password'])
+    user = User.objects.create_user(username=request.POST['regis_username'],
+                                    email=request.POST['regis_email'], 
+                                    password=request.POST['regis_password'])
     login(request, user)
     return redirect('/')
 
 def user_login(request):
-    user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+    user = authenticate(request, username=request.POST['login_username'], password=request.POST['login_password'])
     if user is not None:
         login(request, user)
         return redirect('/')
