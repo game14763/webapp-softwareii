@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>Write your letter.</title>
+		<style>
+			label { display:inline-block; vertical-align:central; }
+			textarea { display:inline-block; vertical-align:top; }
+
+		</style>
+	</head>
+	<body>
+		<form method='POST' action='/letter/send'>
+			{% csrf_token %}
+			<div>
+                        	<label for="{{ form.subject.id_for_label }}">Subject:</label>
+				{{ letter_form.subject }}
+			</div>
+			<div>
+				<label for="{{ form.message.id_for_label }}">Message:</label>
+				{{ letter_form.message }}
+			</div>
+			<div class='datetimearea'>
+    				<label for="{{ form.datetime.id_for_label }}">Send to:</label>
+				{{ letter_form.datetime }}
+			</div>
+			<input type='submit' value='Send' />
+		</form>
+	</body>
+</html>
+

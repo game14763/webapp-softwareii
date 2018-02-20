@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from letter.models import Letter
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm, RegisterForm
-import datetime
+from .forms import LoginForm, RegisterForm, LetterForm
+import datetime, time
+
 # Create your views here.
 
 def homepage(request):
@@ -17,7 +19,6 @@ def user_register(request):
     user = User.objects.create_user(username=request.POST['username'],
                                     email=request.POST['email'], 
                                     password=request.POST['password'])
-    # user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
     login(request, user)
     return redirect('/')
 
@@ -33,3 +34,17 @@ def user_logout(request):
     logout(request)
     return redirect('/')
 
+def write_letter(request):
+    if request.user.is_authenticated:
+        letter_form = LetterForm()
+        return render(request, 'write_letter.html', {'letter_form': letter_form})
+    return redirect('/')
+
+def send_letter(request):
+    datetime_object = datetime.datetime.strptime(request.POST['datetime'], '%d/%m/%Y %H:%M')
+    Letter.objects.create(subject=request.POST['subject'], message=request.POST['message'], datetime=datetime_object, user=request.user)
+    return redirect('/')
+
+def history(request):
+    letter_list = Letter.objects.filter(user=request.user)
+    return render(request, 'history.html', {'letter_list': letter_list})

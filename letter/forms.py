@@ -1,20 +1,31 @@
 from django import forms
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Username', 
+    login_username = forms.CharField(label='Username', 
                                min_length=6, 
                                widget=forms.TextInput(attrs={'placeholder': 'Username'}))
-    password = forms.CharField(label='Password',
+    login_password = forms.CharField(label='Password',
                                min_length=6,
                                widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label='Username',
+    regis_username = forms.CharField(label='Username',
                                min_length=6,
                                widget=forms.TextInput(attrs={'placeholder': 'Username'}))
-    email = forms.EmailField(label='Email',
+    regis_email = forms.EmailField(label='Email',
                                min_length=6,
                                widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
-    password = forms.CharField(label='Password',
+    regis_password = forms.CharField(label='Password',
                                min_length=6,
                                widget=forms.TextInput(attrs={'placeholder': 'Password'}))
+
+class LetterForm(forms.Form):
+    subject = forms.CharField(label='Subject',
+                              max_length=100,
+                              widget=forms.TextInput(attrs={'placeholder': 'Enter subject here.'}))
+    message = forms.CharField(label='Message',
+                              widget=forms.Textarea(attrs={'placeholder': 'Enter message here.'}))
+    datetime = forms.DateTimeField(label='Send to',
+                                  input_formats='%d/%m/%Y %H:%M',
+                                  widget=forms.DateInput(attrs={'id':'datetimepicker'}))
+                              
