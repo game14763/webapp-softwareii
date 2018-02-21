@@ -19,7 +19,7 @@
 		</style>
 	</head>
 	<body>
-		<table>
+		<table id='id_history_table'>
   			<tr>
     				<th>No.</th>
 				<th>Subject</th>
@@ -29,7 +29,7 @@
 			<tr>
 				<td>{{ forloop.counter }}</td>
 				<td>{{ letter.subject }}</td>
-				<td>{{ letter.sent_time }}</td>
+				<td>{{ letter.sent_time|date:"d/M/Y H:m" }}</td>
 			</tr>
                 	{% endfor %}
 		</table>

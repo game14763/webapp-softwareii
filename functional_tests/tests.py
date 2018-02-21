@@ -13,7 +13,7 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_user_can_register_and_logout(self):
+    def test_user_can_send_letter(self):
         # Hermod hear about new website he goes to it.
         # He open browser go to homepage.
         self.browser.get(self.live_server_url)
@@ -30,7 +30,7 @@ class NewVisitorTest(LiveServerTestCase):
                 inputbox.get_attribute('placeholder'),
                 'Username'
         )
-        inputbox.send_keys('Hermod_isgood')
+        inputbox.send_keys('hermod_isgood')
 
         # He then enter his Emails. (Is he some kind of Django staff?)
         inputbox = self.browser.find_element_by_id('id_regis_email')
@@ -57,10 +57,10 @@ class NewVisitorTest(LiveServerTestCase):
         button.click()
         time.sleep(3)
 
-    def test_user_can_send_letter(self):
+        # def test_user_can_send_letter(self):
         # Hermod want to send a letter to self in next hour.
         # He open browser go to homepage.
-        self.browser.get(self.live_server_url)
+        # self.browser.get(self.live_server_url)
 
         # He notices the website title and header.
         # It is still the same web.
@@ -74,7 +74,7 @@ class NewVisitorTest(LiveServerTestCase):
                 inputbox.get_attribute('placeholder'),
                 'Username'
         )
-        inputbox.send_keys('Hermod_isgood')
+        inputbox.send_keys('hermod_isgood')
 
         inputbox = self.browser.find_element_by_id('id_login_password')
         self.assertEqual(
@@ -83,7 +83,7 @@ class NewVisitorTest(LiveServerTestCase):
         )
         inputbox.send_keys('donthackme')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(5)
+        time.sleep(1)
 
         # After He logged in he have seen his username in header
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -92,4 +92,36 @@ class NewVisitorTest(LiveServerTestCase):
         # He want to send letter so he clicked the send letter button.
         button = self.browser.find_element_by_id('id_write_letter')
         button.click()
-        time.sleep(5)
+
+        inputbox = self.browser.find_element_by_id('id_subject')
+        self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'Enter subject here.'
+        )
+        inputbox.send_keys("homework")
+        
+        inputbox = self.browser.find_element_by_id('id_message')
+        self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'Enter message here.'
+        )
+        inputbox.send_keys("I need to finish the homework.")
+
+        inputbox = self.browser.find_element_by_id('datetimepicker')
+        self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'dd/mm/yyyy hh:mm'
+        )
+        inputbox.send_keys(time.strftime("%d/%m/%Y %H:%M",time.localtime(time.time() + 3600)))
+
+        button = self.browser.find_element_by_id('id_send')
+        button.click()
+
+        button = self.browser.find_element_by_id('id_history')
+        button.click()
+
+        table = self.browser.find_element_by_id('id_history_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('homework', str([row.text for row in rows]))
+        self.assertNotIn('I need to finish the homework.', str([row.text for row in rows]))
+

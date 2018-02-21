@@ -17,7 +17,7 @@ class RegisterForm(forms.Form):
                                widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     regis_password = forms.CharField(label='Password',
                                min_length=6,
-                               widget=forms.TextInput(attrs={'placeholder': 'Password'}))
+                               widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 class LetterForm(forms.Form):
     subject = forms.CharField(label='Subject',
@@ -27,5 +27,5 @@ class LetterForm(forms.Form):
                               widget=forms.Textarea(attrs={'placeholder': 'Enter message here.'}))
     datetime = forms.DateTimeField(label='Send to',
                                   input_formats='%d/%m/%Y %H:%M',
-                                  widget=forms.DateInput(attrs={'id':'datetimepicker'}))
+                                  widget=forms.DateInput(attrs={'id':'datetimepicker', 'placeholder': 'dd/mm/yyyy hh:mm'}))
                               
