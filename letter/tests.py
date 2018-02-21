@@ -8,7 +8,7 @@ from letter.models import Letter
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 
-# Create your tests here.
+# Create your unittests here.
 
 class HomepageTest(TestCase):
 
@@ -22,33 +22,47 @@ class HomepageTest(TestCase):
 
 class RegisterAndLoginTest(TestCase):
 
-    def test_create_account(self):
-        user = User.objects.create_user(username='test_user',email='test@em.il',password='test_password')
+    def test_user_can_register_account(self):
+        user = User.objects.create_user(username='test_user',email='test@ema.il',password='test_password')
         user = authenticate(username='test_user', password='test_password')
         if user is None:
             raise AssertionError('cannot create user account')
-    
+#
+    def test_register_form_use_correct_template(self):
+        self.client.post('/letter/register', data={'regis_username': 'test_user',
+                                                              'regis_email': 'test@ema.il',
+                                                              'regis_password': 'test_password'})
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
+
     def test_redirect_after_register(self):
         response = self.client.post('/letter/register', data={'regis_username': 'test_user',
                                                               'regis_email': 'test@ema.il',
                                                               'regis_password': 'test_password'})
         self.assertRedirects(response, '/')
 
-    def test_shows_username_after_register(self):
+    def test_shows_username_in_title_after_register(self):
         self.client.post('/letter/register', data={'regis_username': 'test_user',
                                                               'regis_email': 'test@ema.il',
                                                               'regis_password': 'test_password'})
         response = self.client.get('/')
         self.assertContains(response, 'test_user')
 
-    def test_redirect_after_login(self):
+    def test_login_form_use_correct_template(self):
         user = User.objects.create_user(username='test_user',email='test@em.il',password='test_password')
+        self.client.post('/letter/login', data={'login_username': 'test_user', 'login_password': 'test_password'})
+
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_redirect_after_login(self):
+        user = User.objects.create_user(username='test_user',email='test@ema.il',password='test_password')
         response = self.client.post('/letter/login', data={'login_username': 'test_user',
                                                            'login_password': 'test_password'})
         self.assertRedirects(response, '/')
 
-    def test_shows_username_after_login(self):
-        user = User.objects.create_user(username='test_user',email='test@em.il',password='test_password')
+    def test_shows_username_in_title_after_login(self):
+        user = User.objects.create_user(username='test_user',email='test@ema.il',password='test_password')
         self.client.post('/letter/login', data={'login_username': 'test_user',
                                                            'login_password': 'test_password'})
         response = self.client.get('/')
@@ -56,18 +70,18 @@ class RegisterAndLoginTest(TestCase):
 
 class LetterModelTest(TestCase):
 
-    def test_create_and_retieve_letter(self):
+    def test_create_and_retrieve_letter(self):
         first_user_ = User.objects.create_user(username='first_user',
                 email='first@ema.il',password='first_password')
         first_datetime_ = timezone.now() + timezone.timedelta(hours=1)
 
-        second_user_ = User.objects.create_user(username='second_user', 
+        second_user_ = User.objects.create_user(username='second_user',
                 email='second@ema.il', password='second_password')
         second_datetime_ = timezone.now() + timezone.timedelta(hours=2)
 
-        Letter.objects.create(subject='first_subject', 
+        Letter.objects.create(subject='first_subject',
                 message='first_message', datetime=first_datetime_, user=first_user_)
-        Letter.objects.create(subject='second_subject', 
+        Letter.objects.create(subject='second_subject',
                 message='second_message', datetime=second_datetime_, user=second_user_)
 
         saved_letters= Letter.objects.all()
@@ -101,7 +115,7 @@ class LetterViewTest(TestCase):
 
         datetime_ = timezone.now() + timezone.timedelta(hours=2)
 
-        self.client.post('/letter/send', data={'subject': 'test_subject', 
+        self.client.post('/letter/send', data={'subject': 'test_subject',
             'message': 'test_message', 'datetime': format(datetime_, '%d/%m/%Y %H:%M')})
         saved_letters= Letter.objects.all()
         self.assertEqual(saved_letters.count(), 1)
@@ -111,18 +125,18 @@ class LetterViewTest(TestCase):
         self.assertEqual(saved_letter.message, 'test_message')
         self.assertEqual(format(saved_letter.datetime, '%d/%m/%Y %H:%M'), format(datetime_, '%d/%m/%Y %H:%M'))
         self.assertEqual(saved_letter.user, user)
-        
+
 
 class HistoryViewTest(TestCase):
 
-    def test_uses_write_letter_template(self):
+    def test_uses_history_template(self):
         user = User.objects.create_user(username='test_user',email='test@em.il',password='test_password')
         self.client.post('/letter/login', data={'login_username': 'test_user', 'login_password': 'test_password'})
 
         response = self.client.get('/letter/history')
         self.assertTemplateUsed(response, 'history.html')
 
-    def test_letters_display_in_history(self):
+    def test_multiple_user_letters_display_in_history(self):
         user_ = User.objects.create_user(username='test_user',
                 email='test@ema.il',password='test_password')
         datetime_1 = timezone.now() + timezone.timedelta(hours=1)
