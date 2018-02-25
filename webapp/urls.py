@@ -20,7 +20,7 @@ from letter import views as letter_views
 from letter import urls as letter_urls
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', letter_views.homepage, name='homepage'),
     path('letter/', include(letter_urls)),
 ]

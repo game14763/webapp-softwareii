@@ -7,6 +7,13 @@ from django.utils import timezone
 class Letter(models.Model):
     subject = models.TextField(default='')
     message = models.TextField(default='')
-    sent_time = models.DateTimeField(default=timezone.now)
-    datetime = models.DateTimeField()
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE) 
+    write_time = models.DateTimeField(default=timezone.now)
+    destination_time = models.DateTimeField()
+    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    letter_status = ( ('Readed', 'Readed'), ('Not Read', 'Not Read') )
+    status = models.CharField(
+             max_length=8,
+             choices=letter_status,
+             default='Not Read',
+             )
+
