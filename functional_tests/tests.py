@@ -14,7 +14,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.quit()
 
     def test_user_can_send_letter(self):
-        # Hermod hear about new website he goes to it.
+        # Hermod hear about new website and he goes to it.
         # He open browser go to homepage.
         self.browser.get(self.live_server_url)
 
@@ -24,7 +24,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Letter', header_text)
 
         # He create his new account by enterring his info.
-        # He inout his Username. Hermod really is good guys.
+        # He input his Username. Hermod really is good guys.
         inputbox = self.browser.find_element_by_id('id_regis_username')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
@@ -51,24 +51,19 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(3)
 
-        # After that he tries to logout.
-        # He find no use now. So he decide to close the browser.
+        # After that, he tries to logout.
         button = self.browser.find_element_by_id('id_logout')
         button.click()
-        time.sleep(3)
+        time.sleep(1)
 
-        # def test_user_can_send_letter(self):
-        # Hermod want to send a letter to self in next hour.
-        # He open browser go to homepage.
-        # self.browser.get(self.live_server_url)
+        ## It is still the same web.
 
-        # He notices the website title and header.
-        # It is still the same web.
+        # He then proceed to login.
         self.assertIn('Letter', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Letter', header_text)
 
-        # Then he login by enter his username and password
+        # He login by enter his username and password.
         inputbox = self.browser.find_element_by_id('id_login_username')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
@@ -85,11 +80,13 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        # After He logged in he have seen his username in header
+        # After he had logged in. Website greet him by his username.
         header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Hello', header_text)
         self.assertIn('hermod_isgood', header_text)
 
-        # He want to send letter so he clicked the send letter button.
+        # He remember that he has homework to do.
+        # He sent letter in 1 hour later.
         button = self.browser.find_element_by_id('id_write_letter')
         button.click()
 
@@ -98,8 +95,8 @@ class NewVisitorTest(LiveServerTestCase):
                 inputbox.get_attribute('placeholder'),
                 'Enter subject here.'
         )
-        inputbox.send_keys("homework")
-        
+        inputbox.send_keys("Finish the homework!")
+
         inputbox = self.browser.find_element_by_id('id_message')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
@@ -112,16 +109,27 @@ class NewVisitorTest(LiveServerTestCase):
                 inputbox.get_attribute('placeholder'),
                 'dd/mm/yyyy hh:mm'
         )
-        inputbox.send_keys(time.strftime("%d/%m/%Y %H:%M",time.localtime(time.time() + 3600)))
+        inputbox.send_keys(time.strftime("%d/%m/%Y %H:%M",
+                            time.localtime(time.time() + 3600)))
+        time.sleep(3)
 
+        # After he finished writng, he send the letter.
         button = self.browser.find_element_by_id('id_send')
         button.click()
+        time.sleep(0.5)
 
+        # He wants to know that the letter has been saved
+        # so he check the history.
         button = self.browser.find_element_by_id('id_history')
         button.click()
 
         table = self.browser.find_element_by_id('id_history_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('homework', str([row.text for row in rows]))
+        self.assertIn('Finish the homework!', str([row.text for row in rows]))
         self.assertNotIn('I need to finish the homework.', str([row.text for row in rows]))
+        time.sleep(1)
 
+        # He has know that letter has been saved, but has the letter
+        # been sent to his inbox yet? curious...
+
+        self.fail("What's next boss?")
