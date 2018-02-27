@@ -10,5 +10,7 @@ urlpatterns = [
     path('write/', views.write_letter, name='write letter'),
     path('send', views.send_letter, name='send letter'),
     path('history', views.history, name='history'),
+    path('inbox', views.inbox, name='inbox'),
+    path('detail', views.letter_detail, name='letter detail'),
 ]
 

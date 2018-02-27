@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<title>Inbox</title>
+		<style>
+			table {
+			    font-family: arial, sans-serif;
+			    border-collapse: collapse;
+			    width: 60%;
+			}
+			td, th {
+			    border: 4px solid #dddddd;
+			    text-align: left;
+			    padding: 8px;
+			}
+	
+			tr:nth-child(even) {
+			    background-color: #dddddd;
+			}
+			#letter_detail {
+				border: none;
+  				background: none;
+				color: #00f;
+				text-decoration: underline;
+				cursor: pointer;
+				display: inline;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<table id='id_history_table'>
+  			<tr>
+    				<th>No.</th>
+				<th>Subject</th>
+				<th></th>
+    				<th>From</th>
+				<th>Status</th>
+  			</tr>
+			{% for letter in letter_list %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ letter.subject }}</td>
+				<td><form action="/letter/detail" method="post">
+				    {% csrf_token %}
+				<button id='letter_detail' name="letter_id" value={{ letter.id }}>Read</button>
+                                    </form>
+				<td>{{ letter.write_time|date:"d/M/Y H:m" }}</td>
+				<td>{{ letter.status }}</td>
+			</tr>
+                	{% endfor %}
+		</table>
+		<form action='/'><input type='submit' value='back' /></form>
+	</body>
+</html>

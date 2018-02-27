@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from letter.models import Letter
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, RegisterForm, LetterForm
-import datetime, time
+from django.utils import timezone
 
 
 def homepage(request):
@@ -22,7 +22,8 @@ def user_register(request):
     return redirect('/')
 
 def user_login(request):
-    user = authenticate(request, username=request.POST['login_username'], password=request.POST['login_password'])
+    user = authenticate(request, username=request.POST['login_username'], 
+            password=request.POST['login_password'])
     if user is not None:
         login(request, user)
         return redirect('/')
@@ -40,10 +41,21 @@ def write_letter(request):
     return redirect('/')
 
 def send_letter(request):
-    datetime_object = datetime.datetime.strptime(request.POST['datetime'], '%d/%m/%Y %H:%M')
-    Letter.objects.create(subject=request.POST['subject'], message=request.POST['message'], datetime=datetime_object, user=request.user)
+    datetime_object = timezone.datetime.strptime(request.POST['datetime'], '%d/%m/%Y %H:%M')
+    Letter.objects.create(subject=request.POST['subject'], 
+            message=request.POST['message'], destination_time=datetime_object, user=request.user)
     return redirect('/')
 
 def history(request):
     letter_list = Letter.objects.filter(user=request.user)
     return render(request, 'history.html', {'letter_list': letter_list})
+
+def inbox(request):
+    letter_list = Letter.objects.filter(user=request.user, destination_time__lte=timezone.now())
+    return render(request, 'inbox.html', {'letter_list': letter_list})
+
+def letter_detail(request):
+    letter = Letter.objects.get(pk=request.POST['letter_id'])
+    letter.status = 'Read'
+    letter.save(update_fields=["status"])
+    return render(request, 'detail.html', {'letter': letter})
