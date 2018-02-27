@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, RegisterForm, LetterForm
 import datetime, time
 
-# Create your views here.
 
 def homepage(request):
     if request.user.is_authenticated:
@@ -17,7 +16,7 @@ def homepage(request):
 
 def user_register(request):
     user = User.objects.create_user(username=request.POST['regis_username'],
-                                    email=request.POST['regis_email'], 
+                                    email=request.POST['regis_email'],
                                     password=request.POST['regis_password'])
     login(request, user)
     return redirect('/')

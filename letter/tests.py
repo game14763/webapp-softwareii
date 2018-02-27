@@ -27,7 +27,7 @@ class RegisterAndLoginTest(TestCase):
         user = authenticate(username='test_user', password='test_password')
         if user is None:
             raise AssertionError('cannot create user account')
-#
+
     def test_register_form_use_correct_template(self):
         self.client.post('/letter/register', data={'regis_username': 'test_user',
                                                               'regis_email': 'test@ema.il',
