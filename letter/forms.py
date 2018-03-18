@@ -28,10 +28,5 @@ class LetterForm(forms.Form):
                               widget=forms.Textarea(attrs={'placeholder': 'Enter message here.'}))
     datetime = forms.DateTimeField(label='Send to',
                                   input_formats='%d/%m/%Y %H:%M',
-<<<<<<< HEAD
-                                  widget=forms.DateInput(attrs={'id':'datetimepicker', 'placeholder': 'dd/mm/yyyy hh:mm'}))
-=======
                                   widget=forms.DateInput(attrs={'id':'datetimepicker', 
                                       'placeholder': 'dd/mm/yyyy hh:mm'}))
-                              
->>>>>>> db07ea120c33d466c899e1f13cbd5aa5244fdda9
