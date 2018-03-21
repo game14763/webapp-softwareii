@@ -42,8 +42,20 @@ def write_letter(request):
 
 def send_letter(request):
     datetime_object = timezone.datetime.strptime(request.POST['datetime'], '%d/%m/%Y %H:%M')
-    Letter.objects.create(subject=request.POST['subject'], 
-            message=request.POST['message'], destination_time=datetime_object, user=request.user)
+    if request.POST['to'] is None or request.POST['to'] == '':
+        Letter.objects.create(subject=request.POST['subject'], 
+                              message=request.POST['message'], 
+                              destination_time=datetime_object, 
+                              user=request.user,
+                              reciever=request.user
+                              )
+    else:
+        Letter.objects.create(subject=request.POST['subject'],
+                              message=request.POST['message'],
+                              destination_time=datetime_object,
+                              user=request.user,
+                              reciever=User.objects.get(username=request.POST['to'])
+                              )
     return redirect('/')
 
 def history(request):
@@ -51,7 +63,7 @@ def history(request):
     return render(request, 'history.html', {'letter_list': letter_list})
 
 def inbox(request):
-    letter_list = Letter.objects.filter(user=request.user, destination_time__lte=timezone.now())
+    letter_list = Letter.objects.filter(reciever=request.user, destination_time__lte=timezone.now())
     return render(request, 'inbox.html', {'letter_list': letter_list})
 
 def letter_detail(request):

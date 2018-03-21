@@ -8,7 +8,8 @@ class Letter(models.Model):
     message = models.TextField(default='')
     write_time = models.DateTimeField(default=timezone.now)
     destination_time = models.DateTimeField()
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, default=None, related_name='sender', on_delete=models.CASCADE)
+    reciever = models.ForeignKey(User, default=None, related_name='reciever', on_delete=models.CASCADE)
     letter_status = ( ('Readed', 'Readed'), ('Not Read', 'Not Read') )
     status = models.CharField(
              max_length=8,

@@ -33,18 +33,18 @@
   			<tr>
     				<th>No.</th>
 				<th>Subject</th>
-				<th></th>
     				<th>From</th>
 				<th>Status</th>
   			</tr>
 			{% for letter in letter_list %}
 			<tr>
 				<td>{{ forloop.counter }}</td>
-				<td>{{ letter.subject }}</td>
+
 				<td><form action="/letter/detail" method="post">
-				    {% csrf_token %}
-				<button id='letter_detail' name="letter_id" value={{ letter.id }}>Read</button>
+                                    {% csrf_token %}
+	    <button id='letter_detail' name="letter_id" value={{ letter.id }}> {{ letter.subject }}</button>
                                     </form>
+				</td>
 				<td>{{ letter.write_time|date:"d/M/Y H:m" }}</td>
 				<td>{{ letter.status }}</td>
 			</tr>

@@ -3,7 +3,7 @@ from django import forms
 
 class LoginForm(forms.Form):
     login_username = forms.CharField(label='Username', 
-                               min_length=6,
+                               min_length=3,
                                widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     login_password = forms.CharField(label='Password',
                                min_length=6,
@@ -26,7 +26,9 @@ class LetterForm(forms.Form):
                               widget=forms.TextInput(attrs={'placeholder': 'Enter subject here.'}))
     message = forms.CharField(label='Message',
                               widget=forms.Textarea(attrs={'placeholder': 'Enter message here.'}))
-    datetime = forms.DateTimeField(label='Send to',
+    to = forms.CharField(label='Send to',
+                              widget=forms.TextInput())
+    datetime = forms.DateTimeField(label='Send time',
                                   input_formats='%d/%m/%Y %H:%M',
                                   widget=forms.DateInput(attrs={'id':'datetimepicker', 
                                       'placeholder': 'dd/mm/yyyy hh:mm'}))

@@ -8,22 +8,26 @@
 		</style>
 	</head>
 	<body>
-		<form method='POST' action='/letter/send'>
-			{% csrf_token %}
+		<form action='/letter/send' method='post'>
+                {% csrf_token %}
+		<div>
+                    <label for="">Subject:</label>
+		    <input type="text" name="subject" placeholder="Enter subject here." maxlength="100" required id="id_subject" />
+		</div>
 			<div>
-                        	<label for="{{ form.subject.id_for_label }}">Subject:</label>
-				{{ letter_form.subject }}
+				<label for="">Message:</label>
+				<textarea name="message" cols="40" rows="10" placeholder="Enter message here." required id="id_message">
+</textarea>
 			</div>
 			<div>
-				<label for="{{ form.message.id_for_label }}">Message:</label>
-				{{ letter_form.message }}
+    				<label for="">Send to:</label>
+				<input type="text" name="to" id="id_to" />
 			</div>
 			<div class='datetimearea'>
-    				<label for="{{ form.datetime.id_for_label }}">Send to:</label>
-				{{ letter_form.datetime }}
-			</div>
+                                <label for="">Send time:</label>
+                                <input type="text" name="datetime" id="datetimepicker" placeholder="dd/mm/yyyy hh:mm" required />
+                        </div>
 			<input type='submit' id='id_send' value='Send' />
 		</form>
 	</body>
 </html>
-
