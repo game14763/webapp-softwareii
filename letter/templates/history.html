@@ -12,24 +12,25 @@
 			    text-align: left;
 			    padding: 8px;
 			}
-	
+
 			tr:nth-child(even) {
 			    background-color: #dddddd;
 			}
 		</style>
 	</head>
 	<body>
+		<h1>History</h1><br>
 		<table id='id_history_table'>
   			<tr>
     				<th>No.</th>
 				<th>Subject</th>
-    				<th>From</th>
+    				<th>Write Time</th>
   			</tr>
 			{% for letter in letter_list %}
 			<tr>
 				<td>{{ forloop.counter }}</td>
 				<td>{{ letter.subject }}</td>
-				<td>{{ letter.sent_time|date:"d/M/Y H:m" }}</td>
+				<td>{{ letter.write_time|date:"d/M/Y H:m" }}</td>
 			</tr>
                 	{% endfor %}
 		</table>

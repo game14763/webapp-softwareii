@@ -14,6 +14,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.quit()
 
     def test_user_can_send_letter(self):
+        ## For quicker testing we comment some time.sleep()
+
         # Hermod hear about new website and he goes to it.
         # He open browser go to homepage.
         self.browser.get(self.live_server_url)
@@ -47,9 +49,9 @@ class NewVisitorTest(LiveServerTestCase):
                 'Password'
         )
         inputbox.send_keys('donthackme')
-        time.sleep(3)
+        ## time.sleep(3)
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(3)
+        ## time.sleep(3)
 
         # After that, he tries to logout.
         button = self.browser.find_element_by_id('id_logout')
@@ -127,6 +129,8 @@ class NewVisitorTest(LiveServerTestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn('Finish the homework!', str([row.text for row in rows]))
         self.assertNotIn('I need to finish the homework.', str([row.text for row in rows]))
+        self.assertNotIn(time.strftime("%d/%m/%Y %H:%M"), str([row.text for row in rows]))
+
         time.sleep(1)
 
         # He has know that letter has been saved, but has the letter
