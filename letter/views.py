@@ -34,11 +34,17 @@ def user_logout(request):
     logout(request)
     return redirect('/')
 
+def not_login(request):
+    login_form = LoginForm()
+    regis_form = RegisterForm()
+    return render(request, 'not_login.html',
+            {'login_form': login_form, 'regis_form': regis_form})
+
 def write_letter(request):
-    if request.user.is_authenticated:
-        letter_form = LetterForm()
-        return render(request, 'write_letter.html', {'letter_form': letter_form})
-    return redirect('/')
+    if request.user.is_anonymous:
+        return redirect('/letter/not_login')
+    letter_form = LetterForm()
+    return render(request, 'write_letter.html', {'letter_form': letter_form})
 
 def send_letter(request):
     datetime_object = timezone.datetime.strptime(request.POST['datetime'], '%d/%m/%Y %H:%M')
@@ -59,14 +65,23 @@ def send_letter(request):
     return redirect('/')
 
 def history(request):
+    if request.user.is_anonymous:
+        return redirect('/letter/not_login')
     letter_list = Letter.objects.filter(user=request.user)
     return render(request, 'history.html', {'letter_list': letter_list})
 
 def inbox(request):
-    letter_list = Letter.objects.filter(reciever=request.user, destination_time__lte=timezone.now())
+
+    if request.user.is_anonymous:
+        return redirect('/letter/not_login')
+
+    letter_list = Letter.objects.filter(reciever=request.user,
+            destination_time__lte=timezone.now())
     return render(request, 'inbox.html', {'letter_list': letter_list})
 
 def letter_detail(request):
+    if request.user.is_anonymous:
+        return redirect('/letter/not_login')
     letter = Letter.objects.get(pk=request.POST['letter_id'])
     letter.status = 'Read'
     letter.save(update_fields=["status"])

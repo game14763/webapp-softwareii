@@ -12,5 +12,6 @@ urlpatterns = [
     path('history', views.history, name='history'),
     path('inbox', views.inbox, name='inbox'),
     path('detail', views.letter_detail, name='letter detail'),
+    path('not_login', views.not_login, name='not login')
 ]
 

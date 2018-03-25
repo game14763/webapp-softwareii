@@ -1,0 +1,18 @@
+<html>
+<head><title>Letter: Say hello to your future.</title><head>
+<body>
+    <h1>you are not logged in. <br>please log in or register and try again.</h1>
+    <h2>login</h2><br>
+    <form method="POST" action="letter/login">
+	{% csrf_token %}
+	{{ login_form }}
+	<input type="submit" value="login" />
+    </form><br>
+    <h2>register</h2><br>
+    <form method="POST" action="letter/register">
+	{% csrf_token %}
+	{{ regis_form|linebreaks }}
+        <input type="submit" value="register" />
+    </form><br>
+</body>
+</html>
